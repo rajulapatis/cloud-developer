@@ -40,10 +40,10 @@ import {Request, Response } from 'express';
     res.send("try GET /filteredimage?image_url={{}}")
   } );
   
-  app.get( "/filteredimage/", function (req: Request, res: Response) 
+  app.get( "/filteredimage/", async (req: Request, res: Response) =>
+  
   {
-    try {
-    
+      
     let image_url:string = req.query.image_url;
     
     if (!image_url) 
@@ -51,13 +51,13 @@ import {Request, Response } from 'express';
     res.status(400)
     res.send('image url is required');
     }
-    res.send('The image URL is, ' +image_url);
-    filterImageFromURL(image_url)
-    {
-    res.status(200)
-    res.send('Image was downloaded successfully');
-    }
+
+    try {
+      const filteredImageFilePath = await filterImageFromURL(image_url);
+      res.status(200)
+      .sendFile(filteredImageFilePath,()=> deleteLocalFiles([filteredImageFilePath]));
     } catch(error) {res.render('The error is ' +error)}
+    
     
   }); 
   
