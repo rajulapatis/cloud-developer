@@ -31,6 +31,7 @@ export async function filterImageFromURL(inputURL: string): Promise<string>{
             .write(__dirname + outpath, (image) => {
                 resolve(__dirname + outpath);
                   console.log('The Input URL is, ' +inputURL);
+              
                        
             });
     });
