@@ -1,6 +1,9 @@
 import express from 'express';
 import bodyParser from 'body-parser';
 import {filterImageFromURL, deleteLocalFiles} from './util/util';
+import {Request, Response } from 'express';
+
+
 
 (async () => {
 
@@ -33,21 +36,31 @@ import {filterImageFromURL, deleteLocalFiles} from './util/util';
   
   // Root Endpoint
   // Displays a simple message to the user
-  app.get( "/", async ( req, res ) => {
+  app.get( "/", async ( req: Request, res: Response) => {
     res.send("try GET /filteredimage?image_url={{}}")
   } );
   
-  app.get( "/filteredimage/", function (req,res) 
+  app.get( "/filteredimage/", function (req: Request, res: Response) 
   {
     try {
+    
     let image_url:string = req.query.image_url;
-    if (!image_url) res.send('image url is required');
+    
+    if (!image_url) 
+    {
+    res.status(400)
+    res.send('image url is required');
+    }
     res.send('The image URL is, ' +image_url);
-    filterImageFromURL(image_url);
+    filterImageFromURL(image_url)
+    {
+    res.status(200)
     res.send('Image was downloaded successfully');
+    }
     } catch(error) {res.render('The error is ' +error)}
     
   }); 
+  
   // Start the Server
   app.listen( port, () => {
       console.log( `server running http://localhost:${ port }` );
